@@ -1,0 +1,43 @@
+﻿<Application x:Class="BleedinVampires.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+        <Style x:Key="StyleMainMenuBorder" TargetType="Border">
+            <Setter Property="BorderBrush" Value="#cc0033" />
+            <Setter Property="BorderThickness" Value="3" />
+        </Style>
+        <Style x:Key="StyleMainMenuText" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="#cc0033" />
+        </Style>
+        <Style x:Key="StyleSideMenuText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="#cc0033" />
+        </Style>
+        <Style x:Key="StyleMainMenuButton" TargetType="Button">
+            <Setter Property="Background" Value="#cc0033" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="FontFamily" Value="Gabriola"/>
+            <Setter Property="BorderBrush" Value="#cc0033" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+        <Style x:Key="StyleMainMenuCombo" TargetType="ComboBox">
+            <Setter Property="Background" Value="Black" />
+            <Setter Property="Foreground" Value="#cc0033" />
+            <Setter Property="BorderBrush" Value="#cc0033" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+        <Style x:Key="StyleMainMenuSlider" TargetType="Slider">
+            <Setter Property="Background" Value="Black" />
+            <Setter Property="Foreground" Value="#cc0033" />
+        </Style>
+        <Style x:Key="StyleMainMenuCheck" TargetType="CheckBox">
+            <Setter Property="Background" Value="Black" />
+            <Setter Property="Foreground" Value="#cc0033" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+    </Application.Resources>
+</Application>

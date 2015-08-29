@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="BleedinVampires.Views.SettingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="350" d:DesignWidth="300" Background="Black">
+    <Grid>
+        <!--<Border Style="{StaticResource StyleMainMenuBorder}" >-->
+            <Grid x:Name="GridMainMenu">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>               
+                
+                <TextBlock Margin="5" Grid.Row="0" Style="{StaticResource StyleSideMenuText}" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Video Settings" />
+                <StackPanel Grid.Row="1">
+                    <TextBlock Margin="5" Grid.Row="0" Style="{StaticResource StyleMainMenuText}" VerticalAlignment="Center" Text="Resolution / Window Size:" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox x:Name="ComboResolutionW" Grid.Column="0" Margin="5"  Style="{StaticResource StyleMainMenuCombo}" HorizontalAlignment="Stretch" />
+                        <ComboBox x:Name="ComboResolutionH" Grid.Column="1" Margin="5"  Style="{StaticResource StyleMainMenuCombo}" HorizontalAlignment="Stretch" />
+                    </Grid>                    
+                    <CheckBox  Margin="5"  Style="{StaticResource StyleMainMenuCheck}" VerticalAlignment="Center" Content="Fullscreen" IsChecked="True" />
+                </StackPanel>
+                <TextBlock Margin="5" Grid.Row="2" Style="{StaticResource StyleSideMenuText}" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Audio Settings" />
+                <StackPanel Grid.Row="3">
+                    <CheckBox  Margin="5"  Style="{StaticResource StyleMainMenuCheck}" VerticalAlignment="Center" Content="Gameplay Sounds" IsChecked="True" />
+                    <CheckBox  Margin="5"  Style="{StaticResource StyleMainMenuCheck}" VerticalAlignment="Center" Content="Background Radio" IsChecked="True" />
+                    <TextBlock Margin="5" Grid.Row="0" Style="{StaticResource StyleMainMenuText}" VerticalAlignment="Center" Text="Gameplay Volume:" />
+                    <Slider    Margin="5"  Style="{StaticResource StyleMainMenuSlider}" VerticalAlignment="Center" Maximum="100" Value="50" TickPlacement="TopLeft" TickFrequency="5" IsSnapToTickEnabled="True"/>
+                    <TextBlock Margin="5" Grid.Row="0" Style="{StaticResource StyleMainMenuText}" VerticalAlignment="Center" Text="Radio Volume:" />
+                    <Slider    Margin="5"  Style="{StaticResource StyleMainMenuSlider}" VerticalAlignment="Center" Maximum="100" Value="50" TickPlacement="TopLeft" TickFrequency="5" IsSnapToTickEnabled="True"/>                    
+                </StackPanel>               
+            </Grid>
+        <!--</Border>-->
+    </Grid>
+</UserControl>
