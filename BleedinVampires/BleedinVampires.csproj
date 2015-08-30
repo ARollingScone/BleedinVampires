@@ -91,9 +91,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Control\Client.cs" />
     <Compile Include="Control\GameWindowController.cs" />
     <Compile Include="Control\KeyState.cs" />
-    <Compile Include="Control\MessgingSystem.cs" />
+    <Compile Include="Control\MessagingSystem.cs" />
+    <Compile Include="Control\Server.cs" />
     <Compile Include="Entities\DynamicEntity.cs" />
     <Compile Include="Entities\EntityBase.cs" />
     <Compile Include="Entities\PlayerEntity.cs" />

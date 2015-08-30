@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 namespace BleedinVampires.Control
 {
     //Test Github Commit Change
-    class MessgingSystem
+    class MessagingSystem
     {
         List<string> MessagingOutbox;
         List<string> MessagingInbox;
 
-        public MessgingSystem()
+        public MessagingSystem()
         {
             MessagingInbox = new List<string>();
             MessagingOutbox = new List<string>();
