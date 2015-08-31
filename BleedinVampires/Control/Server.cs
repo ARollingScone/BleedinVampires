@@ -17,89 +17,117 @@ namespace BleedinVampires.Control
     {
         public int id;
         public IPEndPoint clientEndPoint;
+        public KeyState keyState;
 
         public ClientConnection(int id, IPEndPoint endPoint)
         {
             this.id = id;
             this.clientEndPoint = endPoint;
+            this.keyState = new KeyState();
+        }
+
+        public void SetKeyState(KeyState ks)
+        {
+            ks.CopyTo(this.keyState);
         }
     }
 
     class Server
     {
-        MessagingSystem serverMessages;
-
         UdpClient udpServer;
-
-        List<ClientConnection> connectedClients;
-
-        public void testRecieve()
-        {
-            while (true)
-            {
-                var endPoint = new IPEndPoint(IPAddress.Any, 8080); 
-                var data = udpServer.Receive(ref endPoint);
-                Console.WriteLine("receive data from " + endPoint.ToString());
-                //udpServer.Send(new byte[] { 1 }, 1, endPoint); // reply back
-
-                //Check to see if we need to add a new client to the list of clients
-                bool bFound = false;
-                int highestId = 0;
-                foreach(var client in connectedClients)
-                {
-                    if(client.id > highestId) highestId = client.id;
-                    if (client.clientEndPoint.ToString() == endPoint.ToString()) bFound = true;
-                }
-                if(!bFound)
-                {
-                    highestId++;
-                    connectedClients.Add(new ClientConnection(highestId, endPoint));
-                    Console.WriteLine("Connected to new client at: " + endPoint.ToString());
-
-
-                    List<TestSerialize> testList = new List<TestSerialize>();
-                    BinaryFormatter serializer = new BinaryFormatter();
-
-                    try
-                    {
-                        using (var ms = new MemoryStream(data))
-                        {
-                            using (var ds = new DeflateStream(ms, CompressionMode.Decompress, true))
-                            {
-                                testList = (List<TestSerialize>)serializer.Deserialize(ds);
-                            }
-                        }
-
-                        if (testList != null)
-                        {
-                            foreach(var test in testList)
-                            {
-                                Console.WriteLine("Server: " + test.msg + " X: " + test.x + " Y:" + test.y);
-                            }                            
-                            Console.WriteLine("My packet size is: " + data.Length);
-                         }
-                    }
-                    catch(Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                        if (e.InnerException != null) Console.WriteLine(e.InnerException.Message);
-                    }
-
-                }
-                else
-                {
-                    Console.WriteLine("Already connected to client");
-                }
-            } 
-        }
+        public List<ClientConnection> connectedClients;
+        public GameState currentGameState;
 
         public Server()
         {
+            currentGameState = new GameState();
             udpServer = new UdpClient(8080);
             connectedClients = new List<ClientConnection>();
 
-            Thread recieve = new Thread(testRecieve);
-            recieve.Start();            
+            Thread recieve = new Thread(RecieveData);
+            recieve.Start();
+
+            Thread sendThread = new Thread(SendData);
+            sendThread.Start();    
+        }
+
+        public void ConnectClient(IPEndPoint address)
+        {
+            bool bFound = false;
+            int highestId = 0;
+            ClientConnection CC;
+            foreach (var client in connectedClients)
+            {
+                if (client.id > highestId) highestId = client.id;
+                if (client.clientEndPoint.ToString() == address.ToString())
+                {
+                    bFound = true;
+                    CC = client;
+                }
+            }
+            if (!bFound)
+            {
+                highestId++;
+                CC = new ClientConnection(highestId, address);
+                connectedClients.Add(CC);
+                Console.WriteLine("Client at " + address.ToString() + " connected");
+
+                var packet = new Packet<int>() { Payload = CC.id };
+                var serializedData = packet.Serialize();
+                udpServer.Send(serializedData, serializedData.Length, CC.clientEndPoint);
+            }
+            else
+            {
+                Console.WriteLine("Error: Client already connected");
+            }
+        }
+
+        public void RecieveData()
+        {
+            while (true)
+            {
+                var endPoint = new IPEndPoint(IPAddress.Any, 8080);
+                var data = udpServer.Receive(ref endPoint);
+
+                var deserializedData = Packet.Deserialize(data);
+                if (deserializedData.PayloadType.Name == "String")
+                {
+                    if ((string)deserializedData.Payload == "Request Connection") ConnectClient(endPoint);                    
+                }
+                else if (deserializedData.PayloadType.Name == "KeyState")
+                {
+                    foreach(var client in connectedClients)
+                    {
+                        if (endPoint.ToString() == client.clientEndPoint.ToString())
+                        {
+                            client.SetKeyState((KeyState)deserializedData.Payload);
+                            //Console.WriteLine("Got a keystate from Client " + client.id);
+                            break;
+                        }
+                    }                    
+                }
+                else
+                {
+                    Console.WriteLine("Got am unexpected packet type of " + deserializedData.PayloadType.Name);
+                }
+            }
+        }
+
+        public void SendData()
+        {
+            while(true)
+            {
+                var packet = new Packet<GameState>() { Payload = currentGameState };
+                var serializedData = packet.Serialize();
+
+                ClientConnection[] clients = new ClientConnection[connectedClients.Count];
+                connectedClients.CopyTo(clients);
+
+                foreach(var client in clients)
+                {
+                    udpServer.Send(serializedData, serializedData.Length, client.clientEndPoint);
+                }                
+            }
         }
     }
 }

@@ -15,21 +15,34 @@ namespace BleedinVampires.Control
 {
     class GameWindowController
     {
-        bool bClosed = false;
         KeyState keyState;
+        KeyState prevKeyState;
 
         Server server;
         Client client;
 
+        TextureManager TexManager;
+        GameState GlobalGameState;
+
         RenderWindow Window;
         View viewport;
 
-        List<PlayerEntity> PlayerEntityList;
-
-        public GameWindowController()
+        public GameWindowController(int i)
         {
-            server = new Server();
-            client = new Client();
+            TexManager = new TextureManager();
+            GlobalGameState = new GameState();
+            keyState = new KeyState();
+            prevKeyState = new KeyState();
+
+            if (i == 0)
+            {
+                server = new Server();
+                GlobalGameState.Players.Add(0,new PlayerEntity());                
+            }
+            if (i == 1)
+            {
+                client = new Client();
+            }
         }
 
         public void startRendering()
@@ -44,26 +57,80 @@ namespace BleedinVampires.Control
             Window.LostFocus += new EventHandler(Event_OnLostFocus);
 
             viewport = new View(new FloatRect(0, 0, 800, 600));
-            keyState = new KeyState();
-
-            PlayerEntityList = new List<PlayerEntity>();
-            PlayerEntityList.Add(new PlayerEntity());
-
+ 
+            DateTime lastSend = DateTime.Now;
             while (Window.IsOpen)
             {
                 Window.DispatchEvents();
                 Window.Clear(Color.Black);
                 Window.SetView(viewport);
 
-                foreach(var player in PlayerEntityList)
+                foreach(var pvalue in GlobalGameState.Players)
                 {
-                    if (keyState.key_W) player.position.Y -= 0.1f;
-                    if (keyState.key_A) player.position.X -= 0.1f;
-                    if (keyState.key_S) player.position.Y += 0.1f;
-                    if (keyState.key_D) player.position.X += 0.1f;
-                    player.UpdateSprite();
-                    Window.Draw(player.sprite);
-                }                                
+                    var player = pvalue.Value;
+
+                    Window.Draw(player.getSprite(TexManager.LoadedTextures[1]));
+                }
+
+                //Perform Server Action
+                if (server != null)
+                {                   
+                    foreach(var cc in server.connectedClients)
+                    {
+                        if(!GlobalGameState.Players.ContainsKey(cc.id))
+                        {
+                            PlayerEntity pe = new PlayerEntity();
+                            pe.clientId = cc.id;
+                            GlobalGameState.Players.Add(cc.id, pe);
+                        }
+                    }
+
+                    foreach (var pvalue in GlobalGameState.Players)
+                    {
+                        var player = pvalue.Value;
+
+                        if(player.clientId == 0)
+                        {
+                            if (keyState.key_W) player.position[1] -= 0.1f;
+                            if (keyState.key_A) player.position[0] -= 0.1f;
+                            if (keyState.key_S) player.position[1] += 0.1f;
+                            if (keyState.key_D) player.position[0] += 0.1f;
+                        }
+                        else
+                        {
+                            foreach (var cc in server.connectedClients)
+                            {
+                                if (cc.id == player.clientId)
+                                {
+                                    if (cc.keyState.key_W) player.position[1] -= 0.1f;
+                                    if (cc.keyState.key_A) player.position[0] -= 0.1f;
+                                    if (cc.keyState.key_S) player.position[1] += 0.1f;
+                                    if (cc.keyState.key_D) player.position[0] += 0.1f;
+                                }
+                            }
+                        }
+                    }
+
+                    //Send the Current GameState when done
+                    int diff = DateTime.Now.Subtract(lastSend).Milliseconds;
+                    if (diff >= 34)
+                    {
+                        server.currentGameState = GlobalGameState;
+                        lastSend = DateTime.Now;
+                    }
+                }
+                //Perform Client Action
+                else
+                {
+                    GlobalGameState = client.GetGameState();
+
+                    if(!prevKeyState.Compare(keyState))
+                    {
+                        client.bKeyStateChanged = true;
+                        client.keyState = keyState;
+                        keyState.CopyTo(prevKeyState);
+                    }
+                }               
 
                 Window.Display();
             }
@@ -71,31 +138,17 @@ namespace BleedinVampires.Control
 
         void Event_OnClose(object sender, EventArgs e)
         {
-            //Console.WriteLine("Closing");
-            //renderThread.Abort();
             Window.Close();
         }
 
-        void Event_OnResize(object sender, EventArgs e)
-        {
-            ////Do we need to do this???
-            //int resX = (int) ((SizeEventArgs)e).Width;
-            //int resY = (int) ((SizeEventArgs)e).Height;
-
-            //int newH = (800*resY)/resX;
-            //int displace = (newH - 600)/(-2);
-
-            //viewport = new View(new FloatRect(0, 0, resX, resY));
-            //Console.WriteLine("Resizing");
-        }
+        void Event_OnResize(object sender, EventArgs e) {}
 
         void Event_OnKeyPush(object sender, EventArgs e)
         {
             KeyEventArgs keyArgs = (KeyEventArgs)e;
             Keyboard.Key key = keyArgs.Code;
 
-            //Console.WriteLine("Key Pressed: " + key.ToString());
-
+            keyState.CopyTo(prevKeyState);
             if (key == Keyboard.Key.W) keyState.key_W = true;
             if (key == Keyboard.Key.A) keyState.key_A = true;
             if (key == Keyboard.Key.S) keyState.key_S = true;
@@ -107,18 +160,13 @@ namespace BleedinVampires.Control
             KeyEventArgs keyArgs = (KeyEventArgs)e;
             Keyboard.Key key = keyArgs.Code;
 
-            //Console.WriteLine("Key Released: " + key.ToString());
-
+            keyState.CopyTo(prevKeyState);
             if (key == Keyboard.Key.W) keyState.key_W = false;
             if (key == Keyboard.Key.A) keyState.key_A = false;
             if (key == Keyboard.Key.S) keyState.key_S = false;
             if (key == Keyboard.Key.D) keyState.key_D = false;
         }
 
-        void Event_OnLostFocus(object sender, EventArgs e)
-        {
-            //Console.WriteLine("Lost Focus");
-            keyState.ClearAll();
-        }
+        void Event_OnLostFocus(object sender, EventArgs e) {}
     }
 }

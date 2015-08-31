@@ -20,11 +20,14 @@ namespace BleedinVampires.Control
     class GameState
     {
         //Contains a list of each type etc
-        List<PlayerEntity> list_Players;
+        public Dictionary<int,PlayerEntity> Players;
+        public int id;
 
-        //List of Enemies
-
-        //List of Dynamic Blocks
+        public GameState()
+        {
+            id = DateTime.Now.Second;
+            Players = new Dictionary<int,PlayerEntity>();
+        }
     }
 
     //De/Serializes the game state into a byte[] using Binary Formatter

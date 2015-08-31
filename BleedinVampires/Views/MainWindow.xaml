@@ -19,9 +19,9 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Button Margin="5" Style="{StaticResource StyleMainMenuButton}" Grid.Row="0" x:Name="ui_ButtonSinglePlayer" Content="Play Singleplayer" Click="ui_ButtonSinglePlayer_Click"/>
-                <Button Margin="5" Style="{StaticResource StyleMainMenuButton}" Grid.Row="1" x:Name="ui_ButtonHostServer"   Content="Host Server"/>
-                <Button Margin="5" Style="{StaticResource StyleMainMenuButton}" Grid.Row="2" x:Name="ui_ButtonJoinServer"   Content="Join Server"/>
+                <Button Margin="5" Style="{StaticResource StyleMainMenuButton}" Grid.Row="0" x:Name="ui_ButtonSinglePlayer" Content="Play Singleplayer"/>
+                <Button Margin="5" Style="{StaticResource StyleMainMenuButton}" Grid.Row="1" x:Name="ui_ButtonHostServer"   Content="Host Server" Click="ui_ButtonHostServer_Click"/>
+                <Button Margin="5" Style="{StaticResource StyleMainMenuButton}" Grid.Row="2" x:Name="ui_ButtonJoinServer"   Content="Join Server" Click="ui_ButtonJoinServer_Click"/>
                 <Button Margin="5" Style="{StaticResource StyleMainMenuButton}" Grid.Row="3" x:Name="ui_ButtonSettings"     Content="Change Settings"/>
                 <Button Margin="5" Style="{StaticResource StyleMainMenuButton}" Grid.Row="4" x:Name="ui_ButtonExit"         Content="Exit Game"/>
             </Grid>

@@ -96,13 +96,12 @@
     <Compile Include="Control\GameState.cs" />
     <Compile Include="Control\GameWindowController.cs" />
     <Compile Include="Control\KeyState.cs" />
-    <Compile Include="Control\MessagingSystem.cs" />
+    <Compile Include="Control\Packet.cs" />
     <Compile Include="Control\Server.cs" />
-    <Compile Include="Entities\DynamicEntity.cs" />
+    <Compile Include="Control\TextureManager.cs" />
+    <Compile Include="Entities\DynamicEntityBase.cs" />
     <Compile Include="Entities\EntityBase.cs" />
     <Compile Include="Entities\PlayerEntity.cs" />
-    <Compile Include="Entities\SerializableEntity.cs" />
-    <Compile Include="Entities\TestSerialize.cs" />
     <Compile Include="Views\SettingView.xaml.cs">
       <DependentUpon>SettingView.xaml</DependentUpon>
     </Compile>

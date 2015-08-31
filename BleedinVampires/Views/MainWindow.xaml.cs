@@ -49,11 +49,17 @@ namespace BleedinVampires.Views
             ViewSettings.ComboResolutionH.SelectedIndex = 0;
         }
 
-        private void ui_ButtonSinglePlayer_Click(object sender, RoutedEventArgs e)
+        private void ui_ButtonHostServer_Click(object sender, RoutedEventArgs e)
         {
             //SFML.Graphics.RenderWindow renderwindow = new SFML.Graphics.RenderWindow(new SFML.Window.VideoMode(800, 600), "Bleedin' Vampires");
 
-            GameWindowController c = new GameWindowController();
+            GameWindowController c = new GameWindowController(0);
+            c.startRendering();
+        }
+
+        private void ui_ButtonJoinServer_Click(object sender, RoutedEventArgs e)
+        {
+            GameWindowController c = new GameWindowController(1);
             c.startRendering();
         }
     }
