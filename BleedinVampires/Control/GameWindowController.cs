@@ -18,10 +18,19 @@ namespace BleedinVampires.Control
         bool bClosed = false;
         KeyState keyState;
 
+        Server server;
+        Client client;
+
         RenderWindow Window;
         View viewport;
 
         List<PlayerEntity> PlayerEntityList;
+
+        public GameWindowController()
+        {
+            server = new Server();
+            client = new Client();
+        }
 
         public void startRendering()
         {
@@ -62,7 +71,7 @@ namespace BleedinVampires.Control
 
         void Event_OnClose(object sender, EventArgs e)
         {
-            Console.WriteLine("Closing");
+            //Console.WriteLine("Closing");
             //renderThread.Abort();
             Window.Close();
         }
@@ -85,7 +94,7 @@ namespace BleedinVampires.Control
             KeyEventArgs keyArgs = (KeyEventArgs)e;
             Keyboard.Key key = keyArgs.Code;
 
-            Console.WriteLine("Key Pressed: " + key.ToString());
+            //Console.WriteLine("Key Pressed: " + key.ToString());
 
             if (key == Keyboard.Key.W) keyState.key_W = true;
             if (key == Keyboard.Key.A) keyState.key_A = true;
@@ -98,7 +107,7 @@ namespace BleedinVampires.Control
             KeyEventArgs keyArgs = (KeyEventArgs)e;
             Keyboard.Key key = keyArgs.Code;
 
-            Console.WriteLine("Key Released: " + key.ToString());
+            //Console.WriteLine("Key Released: " + key.ToString());
 
             if (key == Keyboard.Key.W) keyState.key_W = false;
             if (key == Keyboard.Key.A) keyState.key_A = false;
@@ -108,7 +117,7 @@ namespace BleedinVampires.Control
 
         void Event_OnLostFocus(object sender, EventArgs e)
         {
-            Console.WriteLine("Lost Focus");
+            //Console.WriteLine("Lost Focus");
             keyState.ClearAll();
         }
     }

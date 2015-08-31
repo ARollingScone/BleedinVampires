@@ -22,6 +22,8 @@ namespace BleedinVampires.Entities
         public Vector2f prev_scale;
         //World Rotation
         public float prev_rotation;
+        //Entity Id
+        public int entityId;
 
         ///////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////Server Client Methods/////////////////////////////////////////
@@ -38,5 +40,19 @@ namespace BleedinVampires.Entities
 
         //Converts the object into a packet string with only changes since last send
         abstract public string ToPacketStringMinimal();
+
+        //Converts this into a serializable Entity
+        public SerializableEntity ToSerializableEntity()
+        {
+            SerializableEntity serialEntity = new SerializableEntity();
+
+            serialEntity.position[0] = this.position.X;
+            serialEntity.position[1] = this.position.Y;
+            serialEntity.scale[0] = this.scale.X;
+            serialEntity.scale[1] = this.scale.Y;
+            serialEntity.rotation = this.rotation;
+
+            return serialEntity;
+        }
     }
 }
