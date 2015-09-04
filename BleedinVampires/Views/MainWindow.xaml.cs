@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using BleedinVampires.Control;
+using BleedinVampires.Actors;
 
 namespace BleedinVampires.Views
 {
@@ -61,6 +62,11 @@ namespace BleedinVampires.Views
         {
             GameWindowController c = new GameWindowController(1);
             c.startRendering();
+        }
+
+        private void ui_ButtonSinglePlayer_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

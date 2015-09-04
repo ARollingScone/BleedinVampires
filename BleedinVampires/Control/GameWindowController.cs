@@ -65,51 +65,10 @@ namespace BleedinVampires.Control
                 Window.Clear(Color.Black);
                 Window.SetView(viewport);
 
-                foreach(var pvalue in GlobalGameState.Players)
-                {
-                    var player = pvalue.Value;
-
-                    Window.Draw(player.getSprite(TexManager.LoadedTextures[1]));
-                }
-
                 //Perform Server Action
                 if (server != null)
                 {                   
-                    foreach(var cc in server.connectedClients)
-                    {
-                        if(!GlobalGameState.Players.ContainsKey(cc.id))
-                        {
-                            PlayerEntity pe = new PlayerEntity();
-                            pe.clientId = cc.id;
-                            GlobalGameState.Players.Add(cc.id, pe);
-                        }
-                    }
-
-                    foreach (var pvalue in GlobalGameState.Players)
-                    {
-                        var player = pvalue.Value;
-
-                        if(player.clientId == 0)
-                        {
-                            if (keyState.key_W) player.position[1] -= 0.1f;
-                            if (keyState.key_A) player.position[0] -= 0.1f;
-                            if (keyState.key_S) player.position[1] += 0.1f;
-                            if (keyState.key_D) player.position[0] += 0.1f;
-                        }
-                        else
-                        {
-                            foreach (var cc in server.connectedClients)
-                            {
-                                if (cc.id == player.clientId)
-                                {
-                                    if (cc.keyState.key_W) player.position[1] -= 0.1f;
-                                    if (cc.keyState.key_A) player.position[0] -= 0.1f;
-                                    if (cc.keyState.key_S) player.position[1] += 0.1f;
-                                    if (cc.keyState.key_D) player.position[0] += 0.1f;
-                                }
-                            }
-                        }
-                    }
+                    
 
                     //Send the Current GameState when done
                     int diff = DateTime.Now.Subtract(lastSend).Milliseconds;
