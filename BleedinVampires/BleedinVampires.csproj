@@ -94,17 +94,13 @@
     </ApplicationDefinition>
     <Compile Include="Actors\DynamicActor.cs" />
     <Compile Include="Actors\PlayerActor.cs" />
-    <Compile Include="Control\Client.cs" />
-    <Compile Include="Control\GameState.cs" />
-    <Compile Include="Control\GameWindowController.cs" />
-    <Compile Include="Control\KeyState.cs" />
-    <Compile Include="Control\Packet.cs" />
-    <Compile Include="Control\Server.cs" />
+    <Compile Include="Control\InputManager.cs" />
     <Compile Include="Control\TextureManager.cs" />
     <Compile Include="Actors\Actor.cs" />
-    <Compile Include="Entities\DynamicEntityBase.cs" />
-    <Compile Include="Entities\EntityBase.cs" />
-    <Compile Include="Entities\PlayerEntity.cs" />
+    <Compile Include="Game\GameClientController.cs" />
+    <Compile Include="Game\GameController.cs" />
+    <Compile Include="Game\GameServerController.cs" />
+    <Compile Include="Game\GameWorld.cs" />
     <Compile Include="Network\GameClient.cs" />
     <Compile Include="Network\GameNetwork.cs" />
     <Compile Include="Network\GameServer.cs" />

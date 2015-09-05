@@ -4,23 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using SFML.Graphics;
+using SFML.System;
+
 namespace BleedinVampires.Actors
 {
     public class PlayerActor : DynamicActor
     {
-        #region MemberVariables
-
-        //Member Variables
-        public float[] position;
-        public float rotation;
-
-        #endregion
-
         public PlayerActor()
         {
             this.NetworkId = 12;
             this.position = new float[] { 15, 15 };
             this.rotation = 25;
+            this.bDrawable = true;
+
+            this.collideType = CollisionType.Player;
+            this.collisionSize = new int[] { 60, 60 };
         }
 
         #region GetNetwork
@@ -62,5 +61,18 @@ namespace BleedinVampires.Actors
         //public abstract void SetNetworkDataPartial(byte[] NetworkData);
 
         #endregion
+
+        public override void Draw(RenderWindow window)
+        {
+            CircleShape shape = new CircleShape(30);
+            shape.Position = new Vector2f(position[0], position[1]);
+            window.Draw(shape);
+        }
+
+        public override void Update(float deltaTime)
+        {
+            position[0] += (1 * deltaTime);
+            position[1] += (0.75f * deltaTime);
+        }
     }
 }

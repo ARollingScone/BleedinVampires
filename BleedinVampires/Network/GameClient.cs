@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -16,17 +17,18 @@ namespace BleedinVampires.Network
 
         public GameClient(string iPAddress = "127.0.0.1", int port = 8080)
         {
+            this.port = port;
             bNetworkAlive = true;
 
             //Create the client at this port
             this.UdpClient = new UdpClient();
-            this.HostServer = new IPEndPoint(IPAddress.Parse(iPAddress), 8080);
+            this.HostServer = new IPEndPoint(IPAddress.Parse(iPAddress), port);
             
             this.UdpClient.Connect(HostServer);
             this.UdpClient.Send(new byte[] {NetworkMessageType.ClientConnect},1);
 
-            Inbox = new Queue<NetworkMessage>();
-            Outbox = new Queue<NetworkMessage>();
+            Inbox = new ConcurrentQueue<NetworkMessage>();
+            Outbox = new ConcurrentQueue<NetworkMessage>();
 
             SendThread = new Thread(Send);
             ListenThread = new Thread(Listen);
@@ -35,26 +37,24 @@ namespace BleedinVampires.Network
             ListenThread.Start();
         }
 
-        public override void Send()
+        protected override void Send()
         {
             while (bNetworkAlive)
             {
-                while (Outbox.Count > 0)
+                NetworkMessage msg;
+                while (Outbox.TryDequeue(out msg))
                 {
-                    NetworkMessage msg = Outbox.Dequeue();
                     UdpClient.Send(msg.NetworkData, msg.NetworkData.Length, HostServer);
                 }
             }
         }
 
-        public override void Listen()
+        protected override void Listen()
         {
             while (bNetworkAlive)
             {
                 var data = this.UdpClient.Receive(ref HostServer);
                 Inbox.Enqueue(new NetworkMessage(0, data));
-
-                GetMessageType(data);
             }
         }
 

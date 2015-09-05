@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -8,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace BleedinVampires.Network
 {
-    struct NetworkMessage
+    public struct NetworkMessage
     {
-        public int NetworkDestination;
+        public byte NetworkDestination;
         public byte[] NetworkData;
 
-        public NetworkMessage(int dest, byte[] data)
+        public NetworkMessage(byte dest, byte[] data)
         {
             NetworkDestination = dest;
             NetworkData = data;
@@ -22,14 +23,15 @@ namespace BleedinVampires.Network
 
     public abstract class GameNetwork
     {
+        protected int port;
         protected bool bNetworkAlive;
 
         protected UdpClient UdpClient;
         protected Thread SendThread;
         protected Thread ListenThread;
 
-        public Queue<NetworkMessage> Outbox;
-        public Queue<NetworkMessage> Inbox;
+        public ConcurrentQueue<NetworkMessage> Outbox;
+        public ConcurrentQueue<NetworkMessage> Inbox;
 
         protected abstract void Send();
         protected abstract void Listen();

@@ -14,7 +14,7 @@ namespace BleedinVampires.Control
         Texture Texture;
     }
 
-    class TextureManager
+    public class TextureManager
     {
         public Dictionary<int, Texture> LoadedTextures;
 

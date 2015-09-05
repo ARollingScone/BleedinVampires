@@ -26,5 +26,7 @@ namespace BleedinVampires.Actors
 
         //Modify the actor from network form
         //public abstract void SetNetworkDataPartial(byte[] NetworkData);
+
+        public virtual void Update(float deltaTime) { }
     }
 }

@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 
 using BleedinVampires.Control;
 using BleedinVampires.Actors;
+using BleedinVampires.Game;
 
 namespace BleedinVampires.Views
 {
@@ -52,16 +53,12 @@ namespace BleedinVampires.Views
 
         private void ui_ButtonHostServer_Click(object sender, RoutedEventArgs e)
         {
-            //SFML.Graphics.RenderWindow renderwindow = new SFML.Graphics.RenderWindow(new SFML.Window.VideoMode(800, 600), "Bleedin' Vampires");
-
-            GameWindowController c = new GameWindowController(0);
-            c.startRendering();
+            GameServerController serverController = new GameServerController();
         }
 
         private void ui_ButtonJoinServer_Click(object sender, RoutedEventArgs e)
         {
-            GameWindowController c = new GameWindowController(1);
-            c.startRendering();
+            GameClientController clientController = new GameClientController();
         }
 
         private void ui_ButtonSinglePlayer_Click(object sender, RoutedEventArgs e)
