@@ -44,7 +44,7 @@ namespace BleedinVampires.Network
                 NetworkMessage msg;
                 while (Outbox.TryDequeue(out msg))
                 {
-                    UdpClient.Send(msg.NetworkData, msg.NetworkData.Length, HostServer);
+                    UdpClient.Send(msg.NetworkData, msg.NetworkData.Length);
                 }
             }
         }

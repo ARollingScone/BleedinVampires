@@ -35,6 +35,8 @@ namespace BleedinVampires.Game
 
         public GameWorld()
         {
+            inputs = new Dictionary<byte, InputManager>();
+
             worldState = GameState.InGame;
 
             dynamicActors = new Dictionary<int, DynamicActor>();

@@ -66,19 +66,29 @@ namespace BleedinVampires.Network
         {
             while(bNetworkAlive)
             {
-                var endPoint = new IPEndPoint(IPAddress.Any, port);
-                var data = this.UdpClient.Receive(ref endPoint);
+                try
+                {
+                    var endPoint = new IPEndPoint(IPAddress.Any, port);
+                    var data = this.UdpClient.Receive(ref endPoint);
 
-                byte sender = CompareClients(endPoint);
-                if(sender != 0)
-                {
-                    Inbox.Enqueue(new NetworkMessage(sender, data));
+                    byte sender = CompareClients(endPoint);
+                    if (sender != 0)
+                    {
+                        Inbox.Enqueue(new NetworkMessage(sender, data));
+                    }
+                    else
+                    {
+                        byte clientId = GetAvaliableClientId();
+                        Clients.Add(clientId, endPoint);
+                        Outbox.Enqueue(new NetworkMessage(clientId, CreateIdMessage(clientId)));
+
+                        Console.WriteLine("Got new client at Id: " + clientId.ToString() + " with address " + endPoint.ToString());
+                    }
                 }
-                else
-                {
-                    byte clientId = GetAvaliableClientId();
-                    Clients.Add(clientId, endPoint);                  
-                    Outbox.Enqueue(new NetworkMessage(clientId, CreateIdMessage(clientId)));
+                catch(Exception e)
+                {                   
+                    Console.WriteLine(e.Message);
+                    if (e.InnerException != null) Console.WriteLine(e.InnerException.Message);
                 }
             }
         }
@@ -86,7 +96,7 @@ namespace BleedinVampires.Network
         //Returns the Id of the sending client
         public byte CompareClients(IPEndPoint NewClient)
         {
-            foreach (var client in Clients) if (client.Value.Address.ToString() == NewClient.Address.ToString()) return client.Key;
+            foreach (var client in Clients) if (client.Value.ToString() == NewClient.ToString()) return client.Key;
             return 0;
         }
 

@@ -14,6 +14,8 @@ namespace BleedinVampires.Game
 
         public GameClientController()
         {
+            this.inputManager = new Control.InputManager(1);
+
             //Setup game world
             this.gameWorld = new GameWorld();
 
@@ -46,6 +48,13 @@ namespace BleedinVampires.Game
 
                     gameWorld.FromNetworkData(msg.NetworkData);
                 }
+            }
+
+            //If we need to notify the server our keys have changed
+            if (bKeysChanged)
+            {
+                gClient.Outbox.Enqueue(new NetworkMessage(0, inputManager.ToNetworkData()));
+                bKeysChanged = false;
             }
         }
     }
